@@ -2,8 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
@@ -15,16 +13,21 @@ url = "https://web.whatsapp.com/"
 driver.get(url)
 driver.implicitly_wait(10)
 
-
 time.sleep(4)
-def find_contact(pnumber):
+def find_contact(cname):
     contacts = driver.find_elements(By.XPATH, "//span[contains(@class, 'ggj6brxn')]")
-
     filtered_contacts = [contact for contact in contacts if contact.get_attribute('title')]
-    for contact in filtered_contacts:
-        if pnumber == contact.text:
-            contact.click()
-
+    if cname in filtered_contacts:
+        cname.click()
+    elif cname not in filtered_contacts:
+        search_bar = driver.find_element(By.XPATH, "(//p[contains(@class,'selectable-text copyable-text')])[1]")
+        search_bar.click()
+        search_bar.send_keys(cname)
+        time.sleep(2)
+        chat_bar = driver.find_element(By.XPATH,"//div[@class = '_199zF _3j691']")
+        chat_bar.click()
+    else:
+        print(f"{cname} is not in contacts")
 
 def send_message(msg):
     msgbox = driver.find_element(By.CLASS_NAME,"_3Uu1_")
@@ -32,8 +35,11 @@ def send_message(msg):
     msgbox.send_keys(Keys.DELETE)
     msgbox.send_keys(msg)
     msgbox.send_keys(Keys.ENTER)
+    print("Message sent")
 
 
-find_contact("Brayo")
-send_message("This is code speaking to you")
-#driver.quit()
+find_contact("House group")
+send_message("Hello World")
+
+time.sleep(5)
+driver.quit()
