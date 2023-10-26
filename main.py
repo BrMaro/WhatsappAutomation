@@ -37,9 +37,8 @@ def send_message(msg):
     msgbox.send_keys(Keys.ENTER)
     print("Message sent")
 
-
-find_contact("House group")
-send_message("Hello World")
-
-time.sleep(5)
-driver.quit()
+def main(cname,msg):
+    find_contact(cname)
+    send_message(msg)
+    time.sleep(5)
+    driver.quit()
